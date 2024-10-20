@@ -1,13 +1,13 @@
 from flask import Flask, jsonify, request
-from production import Hotel
-from production.const import MILES_TO_KM
+#import Hotel
+#from production.const import MILES_TO_KM
 
 app = Flask(__name__)
 
 
 
-def getHotels(lat: float, long: float, radius: float) -> list[Hotel]: 
-    pass
+# def getHotels(lat: float, long: float, radius: float) -> list[Hotel]: 
+#     pass
 
 
 @app.route('/hotel/', methods=['GET'])
