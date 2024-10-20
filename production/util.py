@@ -1,14 +1,5 @@
 import math
-import os
-import googlemaps
-import time
-import math
-import pandas as pd
 import requests
-from datetime import datetime, timedelta
-from typing import List
-
-from typing import List
 
 from hotel import POI, Hotel
 def haversine_distance(lat_1: float, lon_1: float, lat_2: float, lon_2: float) -> float:
@@ -86,83 +77,18 @@ def nearby_search(hotel : Hotel) -> bool:
         print(f"Error for hotel '{hotel.name}': {response.status_code}, {response.text}")
         return False
 
-client_id = 'rAzoJyXSy1mh8vIqVA7iV0ujRGKIR7Hm'
-client_secret='52v8BJqnXG1eE0Ga'
-AMADEUS_ENDPOINT = 'https://test.api.amadeus.com/v3/shopping/hotel-offers'
-token_url = 'https://test.api.amadeus.com/v1/security/oauth2/token'
-
-def get_access_token():
+def get_access_token() -> str:
     """Fetch access token from Amadeus API."""
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
     }
     data = {
         'grant_type': 'client_credentials',
-        'client_id': client_id,
-        'client_secret': client_secret
+        'client_id': 'GwUXcKXGux48StL5aMI6Wof4ag7WNirR',
+        'client_secret': '2b6p4AVaPWWZRQ2O'
     }
-    response = requests.post(token_url, headers=headers, data=data)
+    response = requests.post("https://test.api.amadeus.com/v1/security/oauth2/token", headers=headers, data=data)
     if response.status_code == 200:
         return response.json().get('access_token')
     else:
         raise Exception("Failed to fetch access token")
-    
-def get_closest_hotel_ids(latitude, longitude, bearer_token):
-    url = "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode"
-    headers = {
-        "Authorization": f"Bearer {bearer_token}"
-    }
-    params = {
-        "latitude": latitude,
-        "longitude": longitude,
-        "radius": 1
-    }
-    
-    response = requests.get(url, headers=headers, params=params)
-    if response.status_code == 200:
-        hotels = response.json()
-        # get all the hotels in the area and return them
-        hotel_ids = [hotel['hotelId'] for hotel in hotels['data']]
-        
-        return hotel_ids
-        
-        
-        
-    else:
-        return "Null"
-    
-def get_monthly_prices(lat, lon, check_in_date, check_out_date,token):
-    """Fetch hotel pricing information from Amadeus API."""
-    hotel_ids = get_closest_hotel_ids(lat, lon, token)
-    
-    headers = {
-        'Authorization': f'Bearer {token}'
-    }
-    params = {
-        "hotelIds": hotel_ids[0],
-        "adults": 1,
-        'checkInDate': check_in_date,
-        'checkOutDate': check_out_date
-    }
-    if(hotel_ids == "Null"):
-        return 0
-    
-    response = requests.get(AMADEUS_ENDPOINT, headers=headers, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        # You need to parse the JSON response to extract pricing data
-        # Here you might sum up daily rates or get a total price
-        price = 0
-        try:
-            price = data['data'][0]['offers'][0]['price']['total']
-            price = float(price)
-        except:
-            price = 0
-        return price
-    else:
-        print("Failed to fetch data:", response.json())
-        print("Skipping hotel due to error")
-        return -1
-
-
-

@@ -1,8 +1,12 @@
+from datetime import datetime
+from time import sleep
 from typing import List
 
 import numpy as np
+import requests
 from const import *
 import math
+
 
 class POI:
     #Place Name,lat,long,distance,Rating,Number of Ratings,Place Type
@@ -84,15 +88,18 @@ class Hotel:
 
         self.predictedPrice = formatted_price
 
-    def getPrice(self):
+    def getPrice(self, token: str):
         """
         Get the price of the hotel from the Amadeus API.
         """
-        
+        start_date = datetime(2025, 1, 14)
+        end_date = datetime(2025, 1, 16)
+        self.actualPrice = self.get_monthly_prices(self.latitude, self.longitude,start_date.strftime('%Y-%m-%d'),end_date.strftime('%Y-%m-%d'), token)
+        sleep(0.1)
     def addPOI(self, poi : POI):
         """
         Add a point of interest to the hotel object.
-        """
+        """        
         poi.distance = self.haversine_distance(self.latitude, self.longitude, poi.latitude, poi.longitude)
         if(poi.distance <= MAX_POI_DISTANCE):
             self.pois.append(poi)
@@ -130,5 +137,67 @@ class Hotel:
             # Distance in kilometers
         distance = R * c
         return distance
+
+        
+    def get_closest_hotel_ids(self,latitude, longitude, bearer_token):
+        url = "https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-geocode"
+        headers = {
+            "Authorization": f"Bearer {bearer_token}"
+        }
+        params = {
+            "latitude": latitude,
+            "longitude": longitude,
+            "radius": 1
+        }
+        
+        response = requests.get(url, headers=headers, params=params)
+        if response.status_code == 200:
+            hotels = response.json()
+            # get all the hotels in the area and return them
+            hotel_ids = [hotel['hotelId'] for hotel in hotels['data']]
+            
+            return hotel_ids
+            
+            
+            
+        else:
+            return "Null"
+        
+    def get_monthly_prices(self,lat, lon, check_in_date, check_out_date,token):
+        """Fetch hotel pricing information from Amadeus API."""
+        hotel_ids = self.get_closest_hotel_ids(lat, lon, token)
+        
+        headers = {
+            'Authorization': f'Bearer {token}'
+        }
+        params = {
+            "hotelIds": hotel_ids[0],
+            "adults": 1,
+            'checkInDate': check_in_date,
+            'checkOutDate': check_out_date
+        }
+        if(hotel_ids == "Null"):
+            return -1
+        
+        response = requests.get("https://test.api.amadeus.com/v3/shopping/hotel-offers", headers=headers, params=params)
+        if response.status_code == 200:
+            data = response.json()
+            # You need to parse the JSON response to extract pricing data
+            # Here you might sum up daily rates or get a total price
+            price = 0
+            try:
+                price = data['data'][0]['offers'][0]['price']['total']
+                price = float(price)
+            except:
+                price = -1
+            return price/2
+        else:
+            print("Failed to fetch data:", response.json())
+            print("Skipping hotel due to error")
+            return -1
+
+
+
+
         
 

@@ -4,7 +4,7 @@ from flask import Flask, jsonify, request
 import joblib
 import requests
 from hotel import Hotel
-from util import nearby_search
+from util import get_access_token, nearby_search
 app = Flask(__name__)
 
 
@@ -52,13 +52,14 @@ def get_hotel():
         radius = request.args.get('radius', type=float)
         # test data
         hotels = getHotels(lat, long, radius)
+        token = get_access_token()
         for hotel in hotels:
             success = nearby_search(hotel)
             if(not success):
                 continue
             model = joblib.load("model.pkl")
             hotel.predictPrice(model)
-            hotel.getPrice()
+            hotel.getPrice(token)
             
         
         hotels_payload = [hotel.to_dict() for hotel in hotels]
