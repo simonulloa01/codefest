@@ -60,13 +60,13 @@ def get_hotel():
                 continue
             model = joblib.load("model.pkl")
             hotel.predictPrice(model)
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
-            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 149.00 if hotel.name == "Main Street Inn" else hotel.actualPrice
+            hotel.actualPrice = 249.00 if hotel.name == "The Inn at Virginia Tech and Skelton Conference Center" else hotel.actualPrice
+            hotel.actualPrice = 129.00 if hotel.name == "Clay Corner Inn Blacksburg" else hotel.actualPrice
+            hotel.actualPrice = 199 if hotel.name == "Residence Inn Blacksburg-University" else hotel.actualPrice
+            hotel.actualPrice = 89.00 if hotel.name == "Hyatt Place Blacksburg/University" else hotel.actualPrice
+            hotel.actualPrice = 10.00 if hotel.name == "Blacksburg Bed & Breakfast" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "Joann's bed and breakfast" else hotel.actualPrice
 
             #hotel.getPrice(token)
             
