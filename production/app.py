@@ -6,8 +6,9 @@ import requests
 from hotel import Hotel
 from util import get_access_token, nearby_search
 app = Flask(__name__)
-
-
+from flask_cors import CORS
+app = Flask(__name__)
+CORS(app)
 
 def getHotels(lat: float, long: float, radius: float) -> List[Hotel]:
     hotels = []
@@ -59,7 +60,15 @@ def get_hotel():
                 continue
             model = joblib.load("model.pkl")
             hotel.predictPrice(model)
-            hotel.getPrice(token)
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+            hotel.actualPrice = 0 if hotel.name == "" else hotel.actualPrice
+
+            #hotel.getPrice(token)
             
         
         hotels_payload = [hotel.to_dict() for hotel in hotels]
