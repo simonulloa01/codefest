@@ -1,6 +1,7 @@
 import json
 from typing import List
 from flask import Flask, jsonify, request
+import joblib
 import requests
 from hotel import Hotel
 from util import nearby_search
@@ -55,7 +56,8 @@ def get_hotel():
             success = nearby_search(hotel)
             if(not success):
                 continue
-            hotel.predictPrice()
+            model = joblib.load("model.pkl")
+            hotel.predictPrice(model)
             hotel.getPrice()
             
         
