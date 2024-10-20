@@ -3,7 +3,7 @@ from typing import List
 from flask import Flask, jsonify, request
 import requests
 from hotel import Hotel
-from util import googleMapsService
+from util import nearby_search
 app = Flask(__name__)
 
 
@@ -39,6 +39,10 @@ def getHotels(lat: float, long: float, radius: float) -> List[Hotel]:
     return hotels
 
 
+    
+    
+    
+
 @app.route('/hotel/', methods=['GET'])
 def get_hotel():
     try:
@@ -47,10 +51,15 @@ def get_hotel():
         radius = request.args.get('radius', type=float)
         # test data
         hotels = getHotels(lat, long, radius)
+        for hotel in hotels:
+            success = nearby_search(hotel)
+            if(not success):
+                continue
+            hotel.predictPrice()
+            hotel.getPrice()
+            
+        
         hotels_payload = [hotel.to_dict() for hotel in hotels]
-
-        
-        
         return jsonify(hotels_payload)
     except Exception as e:
         return jsonify({"error": str(e)})

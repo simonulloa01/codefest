@@ -4,7 +4,7 @@ import math
 
 class POI:
     #Place Name,lat,long,distance,Rating,Number of Ratings,Place Type
-    def __init__(self, name: str, latitude: float, longitude: float, rating: float, numberOfRatings: int, placeType: str):
+    def __init__(self, name: str, latitude: float, longitude: float, rating: float, numberOfRatings: int, placeType: str, distance: float):
         """Create a point of interest object for the model to ingest.
         Args:
             hotel (Hotel): the hotel object that the POI realated to
@@ -21,7 +21,7 @@ class POI:
         self.rating: float = rating
         self.numberOfRatings: int = numberOfRatings
         self.placeType: str = placeType
-        self.distance: float = -1.0
+        self.distance: float = distance
     
     def to_dict(self):
         """ Convert the POI object to a dictionary."""
@@ -80,13 +80,13 @@ class Hotel:
         }
         
     def haversine_distance(self,lat_1: float, lon_1: float, lat_2: float, lon_2: float) -> float:
-        # Convert latitude and longitude from degrees to radians
+            # Convert latitude and longitude from degrees to radians
         lat_1_rad = math.radians(lat_1)
         lon_1_rad = math.radians(lon_1)
         lat_2_rad = math.radians(lat_2)
         lon_2_rad = math.radians(lon_2)
 
-        # Haversine formula
+            # Haversine formula
         dlat = lat_2_rad - lat_1_rad
         dlon = lon_2_rad - lon_1_rad
 
@@ -96,8 +96,8 @@ class Hotel:
         # Radius of Earth in kilometers (use 6371 for kilometers, 3956 for miles)
         R = 6371
 
-        # Distance in kilometers
+            # Distance in kilometers
         distance = R * c
         return distance
-    
+        
 
