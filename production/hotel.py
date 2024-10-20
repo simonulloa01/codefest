@@ -22,11 +22,23 @@ class POI:
         self.numberOfRatings: int = numberOfRatings
         self.placeType: str = placeType
         self.distance: float = -1.0
+    
+    def to_dict(self):
+        """ Convert the POI object to a dictionary."""
+        return {
+            "name": self.name,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "rating": self.rating,
+            "numberOfRatings": self.numberOfRatings,
+            "placeType": self.placeType,
+            "distance": self.distance
+        }
         
 
 class Hotel:
-    def __init__(self, hotelId : int, latitude: float, longitude: float, name: str, address: str):
-        self.hotelId: int = hotelId
+    def __init__(self, hotelId : str, latitude: float, longitude: float, name: str, address: str):
+        self.hotelId: str = hotelId
         self.latitude: float = latitude
         self.longitude: float = longitude
         self.name: str = name
@@ -55,6 +67,18 @@ class Hotel:
             self.pois.append(poi)
         return
     
+    def to_dict(self):
+        return {
+            "hotelId": self.hotelId,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "name": self.name,
+            "address": self.address,
+            "actualPrice": self.actualPrice,
+            "predictedPrice": self.predictedPrice,
+            "pois": [poi.to_dict() for poi in self.pois]
+        }
+        
     def haversine_distance(self,lat_1: float, lon_1: float, lat_2: float, lon_2: float) -> float:
         # Convert latitude and longitude from degrees to radians
         lat_1_rad = math.radians(lat_1)
