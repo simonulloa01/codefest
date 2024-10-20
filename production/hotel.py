@@ -1,6 +1,6 @@
 from typing import List
-from production.const import MAX_POI_DISTANCE
-from production.util import haversine_distance
+from const import *
+import math
 
 class POI:
     #Place Name,lat,long,distance,Rating,Number of Ratings,Place Type
@@ -50,9 +50,30 @@ class Hotel:
         """
         Add a point of interest to the hotel object.
         """
-        poi.distance = haversine_distance(self.latitude, self.longitude, poi.latitude, poi.longitude)
+        poi.distance = self.haversine_distance(self.latitude, self.longitude, poi.latitude, poi.longitude)
         if(poi.distance <= MAX_POI_DISTANCE):
             self.pois.append(poi)
         return
+    
+    def haversine_distance(self,lat_1: float, lon_1: float, lat_2: float, lon_2: float) -> float:
+        # Convert latitude and longitude from degrees to radians
+        lat_1_rad = math.radians(lat_1)
+        lon_1_rad = math.radians(lon_1)
+        lat_2_rad = math.radians(lat_2)
+        lon_2_rad = math.radians(lon_2)
+
+        # Haversine formula
+        dlat = lat_2_rad - lat_1_rad
+        dlon = lon_2_rad - lon_1_rad
+
+        a = math.sin(dlat / 2)**2 + math.cos(lat_1_rad) * math.cos(lat_2_rad) * math.sin(dlon / 2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+
+        # Radius of Earth in kilometers (use 6371 for kilometers, 3956 for miles)
+        R = 6371
+
+        # Distance in kilometers
+        distance = R * c
+        return distance
     
 

@@ -1,13 +1,23 @@
 from flask import Flask, jsonify, request
-#import Hotel
-#from production.const import MILES_TO_KM
-
+from hotel import Hotel
+from util import googleMapsService
 app = Flask(__name__)
 
 
 
-# def getHotels(lat: float, long: float, radius: float) -> list[Hotel]: 
-#     pass
+def getHotels(lat: float, long: float, radius: float) -> list[Hotel]: 
+    GoogleMapsService = googleMapsService()
+    # Get hotels from Google Maps API
+    hotels = GoogleMapsService.client.places_nearby(location=(lat, long), radius=radius, type='lodging')
+    # get the place_id of each hotel
+    hotel_ids = [hotel['place_id'] for hotel in hotels['results']]
+    #get the details of each hotel
+    hotel_details = [GoogleMapsService.client.place(place_id=hotel_id) for hotel_id in hotel_ids]
+    for hotel_query in hotel_details:
+        hotel = Hotel(hotel_query['name'], hotel_query['geometry']['location']['lat'], hotel_query['geometry']['location']['lng'], hotel_query['formatted_address'])
+        # add the hotel to the list of hotels
+        hotels.append(hotel)
+    return []
 
 
 @app.route('/hotel/', methods=['GET'])
@@ -15,13 +25,13 @@ def get_hotel():
     
     lat = request.args.get('lat', type=float)
     long = request.args.get('long', type=float)
-    radius = MILES_TO_KM * request.args.get('radius', type=float)
+    radius = request.args.get('radius', type=float)
     # test data
-    lat = 37.215163
-    long = -80.423494
-    radius = 20
-    #list[Hotel] = getHotels(lat, long, radius)
-    
+    lat = 37.23283004520936
+    long = -80.4305801374387
+    radius = 10
+    hotels = getHotels(lat, long, radius)
+    print(hotels)
     # Example data
     hotel_data = {
         
