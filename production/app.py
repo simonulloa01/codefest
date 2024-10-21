@@ -19,7 +19,7 @@ def getHotels(lat: float, long: float, radius: float) -> List[Hotel]:
         'location': f"{lat},{long}",
         'radius': radius,
         'type': 'lodging',
-        'key': 'AIzaSyAjQM8DzQDosr3XDgkcVui_MjuaJmEIW0E'  # Replace 'YOUR_API_KEY' with your actual Google Maps API key
+        'key': '#############'
     }
 
     response = requests.get(endpoint_url, params=params)
