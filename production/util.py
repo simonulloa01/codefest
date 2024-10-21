@@ -50,7 +50,7 @@ def nearby_search(hotel : Hotel) -> bool:
     # Add the FieldMask header to specify which fields to include in the response
     headers = {
         "Content-Type": "application/json",
-        "X-Goog-Api-Key": "AIzaSyAjQM8DzQDosr3XDgkcVui_MjuaJmEIW0E",
+        "X-Goog-Api-Key": "####################",
         "X-Goog-FieldMask": "places.displayName,places.location,places.rating,places.userRatingCount,places.types"
     }
     # Make the POST request to the Places API
@@ -84,8 +84,8 @@ def get_access_token() -> str:
     }
     data = {
         'grant_type': 'client_credentials',
-        'client_id': 'GwUXcKXGux48StL5aMI6Wof4ag7WNirR',
-        'client_secret': '2b6p4AVaPWWZRQ2O'
+        'client_id': '#############################',
+        'client_secret': '###############################'
     }
     response = requests.post("https://test.api.amadeus.com/v1/security/oauth2/token", headers=headers, data=data)
     if response.status_code == 200:
